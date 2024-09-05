@@ -1,21 +1,26 @@
 name: Check Code Review
 
+# Trigger on pull request to the 'main' branch and on pull request reviews
 on:
   pull_request:
     branches:
-      - develop  # The branch you want to protect
+      - develop  # Target branch to enforce review rules
   pull_request_review:
     branches:
-      - develop  # Trigger on review submissions
+      - develop  # Re-run workflow on review submissions
 
 jobs:
   check_review:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Checks out your repository's code
+
       - name: Check for Code Review Approval
         id: review_check
         run: |
-          REVIEWERS_TEAM="Josue9405"  # Update with your org/team
+          REVIEWERS_TEAM="javelard"  # Replace with your actual organization/team slug
           PR_NUMBER=$(jq -r .pull_request.number $GITHUB_EVENT_PATH)
           REVIEWS=$(curl -s \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -27,7 +32,7 @@ jobs:
             exit 1
           fi
 
-      - name: Merge Pull Request
+      - name: Success Message
         if: success()
         run: |
           echo "Pull request is approved by the required team members."
