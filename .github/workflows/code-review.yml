@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Checks out your repository's code
+        uses: actions/checkout@v4  # Checks out your repository's code
 
       - name: Check for Code Review Approval
         id: review_check
